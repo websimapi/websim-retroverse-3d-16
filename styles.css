@@ -117,7 +117,7 @@ h1 {
     bottom: 10px;
     left: 10px;
     display: flex;
-    flex-direction: column-reverse; /* Puts chat bar at the bottom */
+    flex-direction: column; /* Changed from column-reverse */
     z-index: 100;
 }
 
@@ -142,10 +142,10 @@ h1 {
 #chat-container {
     width: 350px;
     height: 200px;
-    background-color: #1a1a1a;
+    background-color: rgba(26, 26, 26, 0.75); /* Made background more transparent */
     border: 1px solid #00ff00;
     border-bottom: none;
-    box-shadow: inset 0 0 10px #00ff00;
+    box-shadow: inset 0 0 10px rgba(0, 255, 0, 0.5); /* Softened box-shadow */
     display: none; /* Hidden by default */
     flex-direction: column;
     margin-bottom: 5px; /* Space between messages and input bar */
