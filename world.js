@@ -12,6 +12,8 @@ const mouse = new THREE.Vector2();
 const peers = new Map();
 let movementEnabled = true;
 let joystickVector = new THREE.Vector2();
+let lastKnownWidth = window.innerWidth;
+let lastKnownHeight = window.innerHeight;
 
 const CHUNK_SIZE = 32;
 const RENDER_DISTANCE = 3; // Render distance in chunks (e.g., 3 = 7x7 grid)
@@ -396,6 +398,19 @@ export function initWorld(canvas) {
 }
 
 function onWindowResize() {
+    // Heuristic to avoid resizing the canvas when the mobile keyboard appears.
+    // This happens when the width stays the same but the height decreases.
+    if (window.innerWidth === lastKnownWidth && window.innerHeight < lastKnownHeight) {
+        console.log("Window resize ignored (likely virtual keyboard).");
+        // Update our knowledge of the height for future checks (e.g., keyboard dismiss).
+        lastKnownHeight = window.innerHeight;
+        return;
+    }
+
+    // Update last known dimensions for future comparisons.
+    lastKnownWidth = window.innerWidth;
+    lastKnownHeight = window.innerHeight;
+
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
