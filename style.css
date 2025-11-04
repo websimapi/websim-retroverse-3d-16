@@ -117,7 +117,7 @@ h1 {
     bottom: 10px;
     left: 10px;
     display: flex;
-    flex-direction: column-reverse; /* Puts chat bar at the bottom */
+    flex-direction: column; /* This is the key change */
     z-index: 100;
 }
 
