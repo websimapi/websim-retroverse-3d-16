@@ -13,7 +13,7 @@ const chatMessagesEl = document.getElementById('chat-messages');
 const chatFormEl = document.getElementById('chat-form');
 const chatInputEl = document.getElementById('chat-input');
 const chatContainerEl = document.getElementById('chat-container');
-const chatToggleBtn = document.getElementById('chat-toggle-btn');
+let chatVisibilityTimeout;
 
 function toggleUI() {
     if (uiContainerEl.style.display === 'block') {
@@ -29,6 +29,20 @@ function toggleChat() {
     } else {
         chatContainerEl.style.display = 'flex';
     }
+}
+
+function showChatContainer() {
+    clearTimeout(chatVisibilityTimeout);
+    chatContainerEl.style.opacity = '1';
+    chatContainerEl.style.visibility = 'visible';
+}
+
+function hideChatContainer(delay = 3000) {
+    clearTimeout(chatVisibilityTimeout);
+    chatVisibilityTimeout = setTimeout(() => {
+        chatContainerEl.style.opacity = '0';
+        chatContainerEl.style.visibility = 'hidden';
+    }, delay);
 }
 
 function displayChatMessage(username, message, isValidated) {
@@ -57,6 +71,12 @@ function displayChatMessage(username, message, isValidated) {
 
     // Keep scroll at bottom (visually)
     chatMessagesEl.scrollTop = chatMessagesEl.scrollHeight;
+
+    // Show chat on new message and schedule it to hide
+    showChatContainer();
+    if (document.activeElement !== chatInputEl) {
+         hideChatContainer(10000); // Keep visible for 10s if not typing
+    }
 }
 
 
@@ -109,6 +129,15 @@ async function main() {
             }
         });
 
+        chatInputEl.addEventListener('focus', () => {
+            showChatContainer();
+        });
+
+        chatInputEl.addEventListener('blur', () => {
+            // Hide after a short delay unless a message was just sent
+            hideChatContainer(500);
+        });
+
         if (isHost) {
             roleEl.textContent = `Role: HOST (${currentUser.username})`;
             // uiContainerEl.style.display = 'block'; // Show for host - now controlled by toggle
@@ -124,7 +153,6 @@ async function main() {
         }
 
         uiToggleBtn.addEventListener('click', toggleUI);
-        chatToggleBtn.addEventListener('click', toggleChat);
         window.addEventListener('keydown', (event) => {
             if (event.key === '`' || event.key === '~') {
                 toggleUI();

@@ -142,11 +142,14 @@ h1 {
 #chat-container {
     width: 350px;
     height: 200px;
-    background-color: #1a1a1a;
+    background-color: rgba(26, 26, 26, 0.7);
     border: 1px solid #00ff00;
     border-bottom: none;
     box-shadow: inset 0 0 10px #00ff00;
-    display: none; /* Hidden by default */
+    display: flex; /* Changed from none to flex */
+    opacity: 0; /* Hidden by default via opacity */
+    visibility: hidden; /* Hidden from interactions */
+    transition: opacity 0.5s, visibility 0.5s; /* Smooth fade */
     flex-direction: column;
     margin-bottom: 5px; /* Space between messages and input bar */
     border-radius: 5px 5px 0 0;
